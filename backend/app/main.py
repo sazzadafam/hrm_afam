@@ -8,9 +8,10 @@ from app.models.user import User
 from app.models.role import Role 
 from app.models.department import Department 
 from app.core.auth import get_password_hash 
+from fastapi.staticfiles import StaticFiles
 
 # Router imports - admin_action is removed as it is now merged into attendance
-from app.api.endpoints import ( auth, admin_user, employee_self, events, attendance, admin_payroll, departments )
+from app.api.endpoints import ( auth, admin_user, employee_self, events, attendance, admin_payroll, departments, adms )
 
 # 1. Database Table Creation
 Base.metadata.create_all(bind=engine)
@@ -37,11 +38,15 @@ app.add_middleware(
 
 # --- Authentication & Profiles ---
 app.include_router(auth.router, prefix="/auth", tags=["Authentication"])
-app.include_router(employee_self.router, prefix="/employee", tags=["Employee - Self Service"])
+# app.include_router(employee_self.router, prefix="/employee", tags=["Employee - Self Service"])
 
 # --- Unified Attendance System ---
 # This single router now handles ZK Sync, Admin Dashboards, and Archives
 app.include_router(attendance.router, prefix="/attendance", tags=["Attendance System"])
+
+# --- Biometric Hardware Sync (ZK ADMS) ---
+
+app.include_router(adms.router)
 
 # --- Department Management (Settings) ---
 app.include_router(departments.router, prefix="/departments", tags=["Settings - Departments"])
@@ -50,10 +55,6 @@ app.include_router(departments.router, prefix="/departments", tags=["Settings - 
 app.include_router(admin_user.router, prefix="/admin/users", tags=["Admin - User Management"])
 app.include_router(admin_payroll.router, prefix="/admin/payroll", tags=["Admin - Payroll"])
 app.include_router(events.router, prefix="/events", tags=["Events & Announcements"])
-
-# --- UI Compatibility Layer ---
-# These prefixes ensure your React frontend (DutyMonitor) works without changing URLs.
-# Both now point to the unified attendance logic.
 app.include_router(attendance.router, prefix="/admin/actions/attendance", tags=["Admin - Attendance UI"])
 app.include_router(attendance.router, prefix="/admin/actions", tags=["Admin - Management Actions"])
 
@@ -66,7 +67,6 @@ def read_root():
         "message": "Backend API is active and healthy."
     }
 
-# 6. Initial System Setup
 @app.post("/setup-system", tags=["System Setup"])
 def setup_system(db: Session = Depends(get_db)):
     # --- Create Roles ---

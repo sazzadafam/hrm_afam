@@ -21,9 +21,20 @@ class Employee(Base):
     # Job & Payroll
     department = Column(String, nullable=False) # Store Name
     designation = Column(String, nullable=True)
+    
+    # --- SHIFT LOGIC ---
     shift_start = Column(String, default="08:00")
     shift_end = Column(String, default="20:00")
     duty_hour = Column(Float, default=12.0)
+    
+    # --- SPLIT SHIFT FIELDS (Step 1 Update) ---
+    has_split_shift = Column(Boolean, default=False)
+    # The time they leave for the long break (e.g., "12:00")
+    break_start = Column(String, nullable=True) 
+    # The time they return to work (e.g., "18:30")
+    break_end = Column(String, nullable=True)   
+    # Pre-calculated break length for payroll (e.g., 6.5)
+    break_duration = Column(Float, default=0.0) 
     
     # Salary Breakdown
     salary = Column(Float, default=0.0)        # Basic Salary
@@ -43,4 +54,3 @@ class Employee(Base):
     user = relationship("User", back_populates="employee_profile")
     payrolls = relationship("MonthlyPayroll", back_populates="employee")
     attendances = relationship("Attendance", back_populates="employee_record")
-

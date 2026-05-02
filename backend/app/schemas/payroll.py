@@ -1,28 +1,41 @@
-# app/schemas/payroll.py
 from pydantic import BaseModel
-from typing import Optional
+from typing import Dict, Optional
+
 
 class PayrollResponse(BaseModel):
-    employee_id: str
-    name: str
-    benefit: str
-    monthly_goal: float
-    actual_hours: float
-    estimated_payout: float
-    net_salary: float
-    status: str
-    late_count: int
-    early_leave_count: int
-    total_paid_leave_hours: float
-    
-    # Add these if you want to keep them in the schema but make them optional
-    # or remove them from the schema if you don't plan to send them.
-    month: Optional[int] = None
-    year: Optional[int] = None
+    employee_id:              str
+    name:                     str
+    month:                    int
+    year:                     int
 
+    # Hours
+    total_actual_hours:       float
+    total_benefit_hours:      float
+    total_paid_leave_hours:   float = 0.0
+    penalty_deduction_hours:  float = 0.0
+    final_billable_hours:     float
 
+    # Infraction counts
+    late_count:               int   = 0
+    early_leave_count:        int   = 0
 
+    # Money
+    base_salary:              float = 0.0
+    hourly_rate_at_time:      float
+    gross_salary:             float
+    food_allowance:           float = 0.0
+    other_allowance:          float = 0.0
+    bonus:                    float = 0.0
+    deduction:                float = 0.0
+    net_salary:               float
 
+    # Meta
+    duty_hour:                float = 0.0
+    standard_monthly_hours:   float = 0.0
+    status:                   str   = "draft"
+
+    class Config:
+        from_attributes = True
 
 
 
@@ -37,7 +50,7 @@ class PayrollResponse(BaseModel):
 
 
 # from pydantic import BaseModel
-# from typing import Dict, List, Optional
+# from typing import Optional, Dict, Any
 
 # class PayrollResponse(BaseModel):
 #     employee_id: str
@@ -46,19 +59,19 @@ class PayrollResponse(BaseModel):
 #     year: int
 #     total_actual_hours: float
 #     total_benefit_hours: float
+#     total_paid_leave_hours: float
+#     penalty_deduction_hours: float
 #     final_billable_hours: float
 #     hourly_rate_at_time: float
+#     base_salary: float
 #     gross_salary: float
-#     food_allowance: float = 0.0
-#     other_allowance: float = 0.0
-#     bonus: float = 0.0
-#     deduction: float = 0.0
 #     net_salary: float
-#     weekly_breakdown: Dict[str, float]
-
-#     class Config:
-#         from_attributes = True
-
-
-
-
+#     late_count: int
+#     early_leave_count: int
+#     status: str
+#     duty_hour: float
+#     food_allowance: float
+#     other_allowance: float
+#     bonus: float
+#     deduction: float
+#     weekly_breakdown: Optional[Dict[str, Any]] = None

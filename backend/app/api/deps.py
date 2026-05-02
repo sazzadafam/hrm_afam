@@ -62,3 +62,5 @@ def super_admin_only(current_user: User = Depends(get_current_active_user)):
             detail="Write access denied. Super Admin role required."
         )
     return current_user
+
+
