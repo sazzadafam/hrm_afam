@@ -105,7 +105,7 @@ const EmployeesPage = () => {
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div>
             <h1 className="text-2xl font-black text-white italic tracking-tight"></h1>
-            <p className="text-slate-500 text-xs uppercase tracking-widest mt-1">AFAM Employee Management</p>
+            <p className="text-white text-xs uppercase tracking-widest mt-1">AFAM Employee Management</p>
           </div>
           
           <div className="flex flex-wrap gap-3 w-full lg:w-auto">
@@ -162,14 +162,14 @@ const EmployeesPage = () => {
               disabled={loading || employees.length === 0}
               className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl font-bold flex items-center gap-2 border border-white/5 transition-all active:scale-95 disabled:opacity-50 text-xs"
             >
-              <Download size={16} /> Export
+              <Download size={16} /> Download Employee List
             </button>
 
             <button 
               onClick={() => setIsModalOpen(true)}
               className="bg-[#137049] hover:bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 shadow-lg transition-all active:scale-95 text-xs"
             >
-              <UserPlus size={18} /> New Employee
+              <UserPlus size={18} /> Add New Employee
             </button>
           </div>
         </div>

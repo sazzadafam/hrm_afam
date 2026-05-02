@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Edit2, Fingerprint, UserMinus, Eye, Clock, Store, Banknote, Clock10Icon } from 'lucide-react';
+import { Mail, Edit2, Fingerprint, UserMinus, Eye, Clock, Store, Banknote, Clock10Icon, PhoneCallIcon, Phone, LucidePhone } from 'lucide-react';
 import { deleteEmployee } from '../api/employeeService';
 import ConfirmDeleteModal from './ConfirmDeleteModal';
 import EditEmployeeModal from './EditEmployeeModal';
@@ -54,7 +54,7 @@ const EmployeeTable = ({ employees = [], loading, onRefresh }) => {
               <th className="px-6 py-5 text-center w-20">Profile</th>
               <th className="px-6 py-5">Personnel Details</th>
               <th className="px-6 py-5">Store & Shift</th>
-              <th className="px-6 py-5">Duty Time</th>
+              <th className="px-6 py-5">Contact</th>
               <th className="px-6 py-5">Status</th>
               {!isReadOnly && <th className="px-6 py-5 text-right">Actions</th>}
             </tr>
@@ -104,11 +104,13 @@ const EmployeeTable = ({ employees = [], loading, onRefresh }) => {
                 {/* Compensation */}
                 <td className="px-6 py-4">
                   <div className="flex flex-col">
-                    <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">Duty Hour</div>
-                    <div className="text-sm font-black text-white flex items-center gap-1">
-                      <Clock10Icon size={14} className="opacity-50"/>
-                      {emp.gross_salary ? Number(emp.duty_hour).toLocaleString() : '0'}
-                      <span className="text-[9px] text-emerald-600 ml-0.5">H</span>
+                    <div className="text-[10px] text-slate-500 uppercase font-bold tracking-tighter">
+                      Phone Number
+                    </div>
+                    <div className="text-sm font-black text-blue-200 flex items-center gap-1">
+                      <LucidePhone size={14} className="opacity-20" />
+                      {emp.phone ? emp.phone : 'N/A'}
+                      <span className="text-[9px] text-emerald-600 ml-0.5"></span>
                     </div>
                   </div>
                 </td>

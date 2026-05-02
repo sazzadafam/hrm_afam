@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "preview": "vite preview",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "dev": "vite --host"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",

@@ -85,9 +85,9 @@ const Sidebar = () => {
           <NavItem icon={Clock} label="Attendance" path="/attendance" />
           <NavItem icon={CreditCard} label="Payroll" path="/payroll" />
           
-          {!isReadOnly && (
+          {/* {!isReadOnly && (
             <NavItem icon={FileText} label="Reports" path="/reports" />
-          )}
+          )} */}
           <NavItem icon={Calendar} label="Events" path="/events" />
 
           {!isReadOnly && (

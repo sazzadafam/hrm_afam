@@ -1,19 +1,20 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'sonner';
+
 import Layout from './components/Layout';
+
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Employee from './pages/EmployeesPage';
 import EmployeeDetails from './pages/EmployeeDetails';
 import Events from './pages/Events';
-import ReportsPage from './pages/ReportsPage'; 
-import { Toaster } from 'sonner';
 import AttendanceDashboard from './pages/AttendanceDashboard';
 import Payroll from './pages/Payroll';
 import SettingsPage from './pages/SettingsPage';
 import EmployeeDash from './pages/employeeDash';
 
-// Standard Protection: Any valid logged-in user (Admin or Auditor)
+// Standard Protection: Any valid logged-in user
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -22,14 +23,13 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
-// Admin-Only Protection: Strictly for 'admin' (Auditor gets redirected)
+// Admin-Only Protection: Strictly for 'admin'
 const AdminRoute = ({ children }) => {
   const token = localStorage.getItem('token');
   const role = localStorage.getItem('role');
   
   if (!token) return <Navigate to="/login" replace />;
   
-  // Restricted to Super Admin only
   if (role !== 'admin') {
     return <Navigate to="/dashboard" replace />;
   }
@@ -40,6 +40,7 @@ const AdminRoute = ({ children }) => {
 function App() {
   return (
     <>
+      {/* Notifications Provider */}
       <Toaster 
         theme="dark" 
         position="top-right" 
@@ -55,111 +56,51 @@ function App() {
       />
 
       <Routes>
-        {/* Public Route */}
-        <Route path="/login" element={<Login />} />
+        {/* 1. ROOT REDIRECT: Fixes the "No routes matched location '/'" warning */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        {/* ============================================================
-            SHARED ROUTES: Accessible by Admin and Read-Only Admin (Auditor)
-            ============================================================ */}
-        
+        {/* 2. PUBLIC ROUTES */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/employee/dashboard" element={<EmployeeDash />} />
+
+        {/* 3. PROTECTED ROUTES (Shared by Admin and Auditor) */}
         <Route 
           path="/dashboard" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Dashboard">
-                <Dashboard />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Dashboard"><Dashboard /></Layout></ProtectedRoute>} 
         />
-
         <Route 
           path="/attendance" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Attendance Management">
-                <AttendanceDashboard />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Attendance Management"><AttendanceDashboard /></Layout></ProtectedRoute>} 
         />
-
         <Route 
           path="/payroll" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Payroll Processing">
-                <Payroll />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Payroll Processing"><Payroll /></Layout></ProtectedRoute>} 
         />
-
         <Route 
           path="/employees" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Employees">
-                <Employee />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Employees"><Employee /></Layout></ProtectedRoute>} 
         />
-
         <Route 
           path="/employees/:id" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Employee Dossier">
-                <EmployeeDetails />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Employee Dossier"><EmployeeDetails /></Layout></ProtectedRoute>} 
         />
-
         <Route 
           path="/events" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Company Announcements">
-                <Events />
-              </Layout>
-            </ProtectedRoute>
-          } 
+          element={<ProtectedRoute><Layout title="Company Announcements"><Events /></Layout></ProtectedRoute>} 
         />
 
-        {/* 2. NEW SHARED ROUTE: Reports Central */}
-        <Route 
-          path="/reports" 
-          element={
-            <ProtectedRoute>
-              <Layout title="Reports Central">
-                <ReportsPage />
-              </Layout>
-            </ProtectedRoute>
-          } 
-        />
-
-        {/* ============================================================
-            RESTRICTED ROUTES: Strictly for Master Admin
-            ============================================================ */}
-        
+        {/* 4. ADMIN-ONLY ROUTES */}
         <Route 
           path="/settings" 
-          element={
-            <AdminRoute>
-              <Layout title="System Settings">
-                <SettingsPage />
-              </Layout>
-            </AdminRoute>
-          } 
+          element={<AdminRoute><Layout title="System Settings"><SettingsPage /></Layout></AdminRoute>} 
         />
 
-        {/* Redirects & Catch-all */}
-        <Route path="/employee/dashboard" element={<EmployeeDash />} />
+        {/* 5. CATCH-ALL: Redirects any undefined URL to dashboard */}
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </>
   );
 }
+
 
 export default App;
